@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stopwatch Web App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #9cbc7b;
+      padding-top: 100px;
+    }
+    h1 {
+      margin-bottom: 30px;
+    }
+    .stopwatch {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #lapList {
+      margin-top: 20px;
+      list-style: none;
+      padding: 0;
+    }
+    #lapList li {
+      background: #edacd7;
+      margin: 5px auto;
+      padding: 8px;
+      width: 200px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>⏱ Stopwatch</h1>
+  <div class="stopwatch" id="display">00:00:00</div>
+  <button onclick="start()">Start</button>
+  <button onclick="pause()">Pause</button>
+  <button onclick="reset()">Reset</button>
+  <button onclick="lap()">Lap</button>
+
+  <ul id="lapList"></ul>
+
+  <script>
+    let [seconds, minutes, hours] = [0, 0, 0];
+    let display = document.getElementById("display");
+    let timer = null;
+
+    function updateDisplay() {
+      let h = hours < 10 ? "0" + hours : hours;
+      let m = minutes < 10 ? "0" + minutes : minutes;
+      let s = seconds < 10 ? "0" + seconds : seconds;
+      display.innerText = `${h}:${m}:${s}`;
+    }
+
+    function start() {
+      if (timer !== null) return;
+      timer = setInterval(() => {
+        seconds++;
+        if (seconds === 60) {
+          seconds = 0;
+          minutes++;
+          if (minutes === 60) {
+            minutes = 0;
+            hours++;
+          }
+        }
+        updateDisplay();
+      }, 1000);
+    }
+
+    function pause() {
+      clearInterval(timer);
+      timer = null;
+    }
+
+    function reset() {
+      pause();
+      [seconds, minutes, hours] = [0, 0, 0];
+      updateDisplay();
+      document.getElementById("lapList").innerHTML = "";
+    }
+
+    function lap() {
+      let lapTime = display.innerText;
+      let li = document.createElement("li");
+      li.innerText = "Lap: " + lapTime;
+      document.getElementById("lapList").appendChild(li);
+    }
+  </script>
+</body>
+</html>
